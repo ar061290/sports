@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sports | Training Journal</title>
+<meta name="description" content="A training journal for sprinting, basketball, calisthenics, jump rope and breaking: goals, milestones and lessons on recovery.">
+<style>
+  :root{
+    --ink:#14161a; --paper:#f6f4ef; --muted:#5d636b; --line:#d9d5cc;
+    --accent:#e4572e; --accent-2:#1f6f78; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+  a{color:var(--accent-2)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  header.top{position:sticky;top:0;z-index:5;background:rgba(246,244,239,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .brand{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.95rem}
+  .brand span{color:var(--accent)}
+  nav a{color:var(--ink);text-decoration:none;margin-left:20px;font-size:.92rem}
+  nav a:hover{color:var(--accent)}
+  .hero{padding:72px 0 48px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-size:clamp(2.3rem,6vw,4.2rem);line-height:1.02;margin:.35em 0 .3em;letter-spacing:-.02em}
+  .lede{font-size:1.15rem;color:var(--muted);max-width:640px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .stat b{display:block;font-size:1.7rem;line-height:1.1}
+  .stat small{color:var(--muted)}
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:1.7rem;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 26px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .card h3{margin:0 0 6px;font-size:1.12rem}
+  .tag{display:inline-block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);font-weight:700;margin-bottom:8px}
+  .card p{margin:0;color:var(--muted);font-size:.95rem}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:.95rem}
+  th{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:#fbfaf7}
+  tr:last-child td{border-bottom:0}
+  .bar{height:8px;background:#ece8df;border-radius:6px;overflow:hidden;min-width:120px}
+  .bar i{display:block;height:100%;background:var(--accent)}
+  .timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+  .timeline li{position:relative;padding:0 0 22px 22px}
+  .timeline li:before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+  .timeline time{font-size:.8rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .timeline b{display:block}
+  .principles{counter-reset:p;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .principles .card:before{counter-increment:p;content:"0" counter(p);display:block;font-weight:800;color:var(--accent);margin-bottom:6px}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;min-height:110px}
+  .day b{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .day p{margin:6px 0 0;font-size:.9rem}
+  .day.rest{background:#eef5f5;border-color:#cfe2e3}
+  .counter{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+  .counter button{font:inherit;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;cursor:pointer}
+  .counter button.ghost{background:transparent;color:var(--ink)}
+  .counter output{font-size:2rem;font-weight:800;min-width:2ch}
+  footer{padding:36px 0 60px;color:var(--muted);font-size:.9rem}
+  @media (max-width:860px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .grid{grid-template-columns:1fr 1fr}
+    .principles{grid-template-columns:1fr}
+    .week{grid-template-columns:repeat(2,1fr)}
+    nav{display:none}
+  }
+  @media (max-width:560px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Sports<span>.</span>Journal</div>
+    <nav>
+      <a href="#disciplines">Disciplines</a>
+      <a href="#goals">Goals</a>
+      <a href="#milestones">Milestones</a>
+      <a href="#recovery">Recovery</a>
+      <a href="#week">Training week</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div class="kicker">Performance enhancement</div>
+      <h1>Train hard.<br>Recover harder.</h1>
+      <p class="lede">A working journal for sprinting, basketball, calisthenics, jump rope and breaking: what I am training for, how I measure it, and what injuries and rest days have taught me about progress.</p>
+      <div class="stats">
+        <div class="stat"><b>5</b><small>disciplines trained</small></div>
+        <div class="stat"><b>3</b><small>fitness pillars: strength, explosiveness, coordination</small></div>
+        <div class="stat"><b>ISSO</b><small>National Games 2025&ndash;26, sprints and basketball</small></div>
+        <div class="stat"><b>33</b><small>double-unders in a row, Sep 2025</small></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="disciplines">
+    <div class="wrap">
+      <h2>Disciplines</h2>
+      <p class="sub">Each one trains something the others need.</p>
+      <div class="grid">
+        <div class="card"><span class="tag">Speed</span><h3>Sprinting</h3><p>100m and 200m. Sprint mechanics, block starts and acceleration, built on years of endurance work.</p></div>
+        <div class="card"><span class="tag">Team</span><h3>Basketball</h3><p>Dunking, backboard blocks and rebounds, and playing more aggressively. Footwork borrowed from badminton.</p></div>
+        <div class="card"><span class="tag">Strength</span><h3>Calisthenics</h3><p>Push-ups with slow negatives, pull-ups, pistol and dragon squats, working towards handstands and the front lever.</p></div>
+        <div class="card"><span class="tag">Rhythm</span><h3>Jump rope</h3><p>Double-unders, running skips forwards and backwards, and the first attempts at a mic release.</p></div>
+        <div class="card"><span class="tag">Creativity</span><h3>Breaking</h3><p>Foundations for power moves like flares: mobility, core strength and coordination, linked to the dance I perform.</p></div>
+        <div class="card"><span class="tag">Base</span><h3>Posture and mobility</h3><p>The unglamorous work that keeps everything else possible: stretching, posture and recovery routines.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="goals">
+    <div class="wrap">
+      <h2>Goals and how they are measured</h2>
+      <p class="sub">Starting point, target, and a rough sense of how far along the road each one is.</p>
+      <table>
+        <thead><tr><th>Measure</th><th>Start</th><th>Target</th><th>Progress</th></tr></thead>
+        <tbody>
+          <tr><td>Push-ups in a row</td><td>3 shaky</td><td>50 clean, then one-arm</td><td><div class="bar"><i style="width:40%"></i></div></td></tr>
+          <tr><td>Pull-ups in a row</td><td>1</td><td>10</td><td><div class="bar"><i style="width:30%"></i></div></td></tr>
+          <tr><td>100m sprint</td><td>15 s</td><td>11 s</td><td><div class="bar"><i style="width:45%"></i></div></td></tr>
+          <tr><td>200m sprint</td><td>29 s</td><td>25 s</td><td><div class="bar"><i style="width:45%"></i></div></td></tr>
+          <tr><td>Vertical jump</td><td>~15 in</td><td>~30 in</td><td><div class="bar"><i style="width:25%"></i></div></td></tr>
+          <tr><td>10 km run</td><td>57 min</td><td>30 min, then a marathon</td><td><div class="bar"><i style="width:15%"></i></div></td></tr>
+          <tr><td>Squats</td><td>Sumo squats</td><td>Pistol and dragon squats, explosive</td><td><div class="bar"><i style="width:35%"></i></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="milestones">
+    <div class="wrap">
+      <h2>Milestones</h2>
+      <p class="sub">Not every entry is a medal. Some are firsts, and some are comebacks.</p>
+      <ul class="timeline">
+        <li><time>June 2025</time><b>First day of plyometrics</b>Testing how high I could obstacle-jump, and starting to train explosiveness on purpose.</li>
+        <li><time>September 2025</time><b>Jump rope in the rain</b>33 double-unders in a row and about 300 normal skips for the first time, plus a first attempt at a mic release.</li>
+        <li><time>2025&ndash;26</time><b>ISSO National Games</b>Represented my school in the U-17 sprints (30th in the 200m, 36th in the 100m nationally) and was part of the basketball squad.</li>
+        <li><time>Early 2026</time><b>Back from muscular guarding</b>After a forced break, rebuilt from about 10 fatigued push-ups to 20 controlled, slightly explosive ones by focusing on push and core work first.</li>
+        <li><time>Mid 2026</time><b>Learning to rest</b>A wrist injury from chasing harder push-up variations taught me to count rest days as progress, with a widget that tracked every day of restraint.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="recovery">
+    <div class="wrap">
+      <h2>Recovery principles</h2>
+      <p class="sub">The lessons that cost the most to learn.</p>
+      <div class="principles">
+        <div class="card"><h3>Time under tension beats rep counts</h3><p>Slow, controlled negatives built more strength than rushing through numbers to say I did them.</p></div>
+        <div class="card"><h3>Restraint is a skill</h3><p>Growth is limited less by effort than by patience. Counting days rested made rest feel like training.</p></div>
+        <div class="card"><h3>Adapt, don't skip</h3><p>If the perfect cool-down isn't possible, do the parts that are. A partial routine beats none.</p></div>
+        <div class="card"><h3>One outlet isn't enough</h3><p>Training is a great way to manage stress, but it works best as one support among many: friends, rest, creativity and conversation.</p></div>
+      </div>
+      <div class="counter" aria-live="polite">
+        <span>Rest-day counter:</span>
+        <output id="days">0</output>
+        <button id="add">Log a rest day</button>
+        <button id="reset" class="ghost">Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="week">
+    <div class="wrap">
+      <h2>A typical training week</h2>
+      <p class="sub">A template, not a rule. It bends around exams, injuries and performances.</p>
+      <div class="week">
+        <div class="day"><b>Mon</b><p>Push and core strength, slow negatives</p></div>
+        <div class="day"><b>Tue</b><p>Sprint mechanics and acceleration</p></div>
+        <div class="day"><b>Wed</b><p>Basketball, then mobility</p></div>
+        <div class="day"><b>Thu</b><p>Pull and legs, pistol squat progressions</p></div>
+        <div class="day"><b>Fri</b><p>Jump rope and plyometrics</p></div>
+        <div class="day"><b>Sat</b><p>Dance and breaking foundations, or an endurance run</p></div>
+        <div class="day rest"><b>Sun</b><p>Rest, stretching, sleep</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Built and maintained by Aadi Ramnani as part of an IB CAS experience in performance enhancement.</div>
+</footer>
+
+<script>
+  (function(){
+    var out=document.getElementById('days'), n=0;
+    try{ n=parseInt(localStorage.getItem('restDays')||'0',10)||0; }catch(e){}
+    out.textContent=n;
+    function save(){ try{ localStorage.setItem('restDays', String(n)); }catch(e){} out.textContent=n; }
+    document.getElementById('add').addEventListener('click',function(){ n++; save(); });
+    document.getElementById('reset').addEventListener('click',function(){ n=0; save(); });
+  })();
+</script>
+</body>
+</html>
