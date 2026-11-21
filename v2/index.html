@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sports Journal | A free training journal for anyone</title>
+<meta name="description" content="A free training journal for any athlete: choose your sports, set measurable goals, log milestones and rest days, and plan your training week. No sign-up; everything stays in your browser.">
+<style>
+  :root{
+    --ink:#14161a; --paper:#f6f4ef; --muted:#5d636b; --line:#d9d5cc;
+    --accent:#e4572e; --accent-2:#1f6f78; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+  a{color:var(--accent-2)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  header.top{position:sticky;top:0;z-index:5;background:rgba(246,244,239,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .brand{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.95rem}
+  .brand span{color:var(--accent)}
+  nav a{color:var(--ink);text-decoration:none;margin-left:20px;font-size:.92rem}
+  nav a:hover{color:var(--accent)}
+  .hero{padding:72px 0 48px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-size:clamp(2.3rem,6vw,4.2rem);line-height:1.02;margin:.35em 0 .3em;letter-spacing:-.02em}
+  .lede{font-size:1.15rem;color:var(--muted);max-width:680px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .stat b{display:block;font-size:1.7rem;line-height:1.1}
+  .stat small{color:var(--muted)}
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:1.7rem;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 26px;max-width:720px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .card h3{margin:0 0 6px;font-size:1.12rem}
+  .tag{display:inline-block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);font-weight:700;margin-bottom:8px}
+  .card p{margin:0;color:var(--muted);font-size:.95rem}
+  .pick{cursor:pointer;position:relative;transition:border-color .15s, box-shadow .15s}
+  .pick input{position:absolute;opacity:0;pointer-events:none}
+  .pick .check{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.8rem;color:#fff}
+  .pick.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .pick.on .check{background:var(--accent);border-color:var(--accent)}
+  .pick:focus-within{outline:2px solid var(--accent-2);outline-offset:2px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:.95rem;vertical-align:middle}
+  th{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:#fbfaf7}
+  tr:last-child td{border-bottom:0}
+  .bar{height:8px;background:#ece8df;border-radius:6px;overflow:hidden;min-width:110px}
+  .bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+  .pct{font-size:.8rem;color:var(--muted)}
+  .timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+  .timeline li{position:relative;padding:0 0 22px 22px}
+  .timeline li:before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent)}
+  .timeline time{font-size:.8rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+  .timeline b{display:block}
+  .timeline .x{margin-left:8px}
+  .principles{counter-reset:p;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .principles .card:before{counter-increment:p;content:"0" counter(p);display:block;font-weight:800;color:var(--accent);margin-bottom:6px}
+  .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;min-height:150px;display:flex;flex-direction:column;gap:6px}
+  .day b{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .day textarea{flex:1;width:100%;min-height:80px;resize:vertical;border:0;background:transparent;font:inherit;font-size:.9rem;padding:0;color:var(--ink)}
+  .day textarea:focus{outline:none}
+  .day label{font-size:.75rem;color:var(--muted);display:flex;gap:6px;align-items:center}
+  .day.rest{background:#eef5f5;border-color:#cfe2e3}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:16px}
+  .field{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--muted)}
+  input[type=text],input[type=number],input[type=date],select,textarea.note{font:inherit;font-size:.95rem;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+  td input[type=text],td input[type=number]{width:100%;min-width:70px;padding:6px 8px}
+  td:first-child input{min-width:170px}
+  button{font:inherit;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:9px 15px;border-radius:8px;cursor:pointer}
+  button.ghost{background:transparent;color:var(--ink)}
+  button.small{padding:4px 10px;font-size:.82rem}
+  button.danger{border-color:#b3261e;color:#b3261e;background:transparent}
+  button:hover{opacity:.9}
+  .counter{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:26px}
+  .counter output{font-size:2rem;font-weight:800;min-width:2ch}
+  .empty{color:var(--muted);font-style:italic}
+  .note-box{background:#fff8ec;border:1px solid #f0dcb8;border-radius:10px;padding:14px 16px;color:#6a5426;font-size:.92rem;margin-top:18px}
+  .tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+  footer{padding:36px 0 60px;color:var(--muted);font-size:.9rem}
+  @media (max-width:860px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .grid{grid-template-columns:1fr 1fr}
+    .principles{grid-template-columns:1fr}
+    .week{grid-template-columns:repeat(2,minmax(0,1fr))}
+    nav{display:none}
+    .goals-wrap{overflow-x:auto}
+  }
+  @media (max-width:560px){.grid{grid-template-columns:1fr}}
+  @media print{
+    header.top,.tools,.row,button,.counter button,.no-print{display:none!important}
+    body{background:#fff}
+    section{padding:24px 0}
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Sports<span>.</span>Journal</div>
+    <nav>
+      <a href="#start">Start</a>
+      <a href="#disciplines">Disciplines</a>
+      <a href="#goals">Goals</a>
+      <a href="#milestones">Milestones</a>
+      <a href="#recovery">Recovery</a>
+      <a href="#week">Training week</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div class="kicker">A free training journal for anyone</div>
+      <h1 id="title">Train hard.<br>Recover harder.</h1>
+      <p class="lede">Pick the sports you train, set goals you can actually measure, log your milestones and rest days, and plan your week. No sign-up and no account: everything you enter stays in this browser on this device.</p>
+      <div class="stats">
+        <div class="stat"><b id="s-disc">0</b><small>disciplines you train</small></div>
+        <div class="stat"><b id="s-goals">0</b><small>goals you are tracking</small></div>
+        <div class="stat"><b id="s-avg">0%</b><small>average progress across your goals</small></div>
+        <div class="stat"><b id="s-rest">0</b><small>rest days logged</small></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="start">
+    <div class="wrap">
+      <h2>Start here</h2>
+      <p class="sub">Add your name if you like, choose your sports below, then fill in your goals. You can start from an example plan and edit it to fit you.</p>
+      <div class="row">
+        <div class="field"><label for="name">Your name (optional)</label><input type="text" id="name" placeholder="e.g. Priya" maxlength="40"></div>
+        <button id="load-example" class="ghost">Load an example plan</button>
+      </div>
+      <div class="tools no-print">
+        <button id="print" class="ghost small">Print my plan</button>
+        <button id="export" class="ghost small">Download a backup</button>
+        <button id="import-btn" class="ghost small">Restore a backup</button>
+        <input type="file" id="import" accept="application/json,.json" hidden>
+        <button id="wipe" class="danger small">Clear everything</button>
+        <button id="wipe-yes" class="danger small" hidden>Yes, delete all my data</button>
+        <button id="wipe-no" class="ghost small" hidden>Cancel</button>
+      </div>
+      <p class="note-box">Your journal is saved only in this browser. If you clear your browsing data or switch devices, it will be gone, so download a backup now and then and restore it wherever you need it.</p>
+    </div>
+  </section>
+
+  <section id="disciplines">
+    <div class="wrap">
+      <h2>Disciplines</h2>
+      <p class="sub">Tap the ones you train. Each one trains something the others need, so it helps to see them together. Add your own if your sport is missing.</p>
+      <div class="grid" id="disc-grid"></div>
+      <div class="row no-print">
+        <div class="field"><label for="new-disc">Add your own discipline</label><input type="text" id="new-disc" placeholder="e.g. Swimming" maxlength="40"></div>
+        <div class="field"><label for="new-disc-note">What you train in it (optional)</label><input type="text" id="new-disc-note" placeholder="e.g. Freestyle endurance, flip turns" maxlength="120"></div>
+        <button id="add-disc">Add discipline</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="goals">
+    <div class="wrap">
+      <h2>Goals and how they are measured</h2>
+      <p class="sub">For each goal, write where you started, where you are now and where you want to get to. Progress is worked out for you. Choose "lower is better" for things like sprint or run times.</p>
+      <div class="goals-wrap">
+        <table>
+          <thead><tr><th>Measure</th><th>Unit</th><th>Start</th><th>Now</th><th>Target</th><th>Better is</th><th>Progress</th><th class="no-print"></th></tr></thead>
+          <tbody id="goal-body"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="goal-empty">No goals yet. Add one below, or load the example plan above.</p>
+      <div class="row no-print"><button id="add-goal">Add a goal</button></div>
+    </div>
+  </section>
+
+  <section id="milestones">
+    <div class="wrap">
+      <h2>Milestones</h2>
+      <p class="sub">Not every entry has to be a medal. Some are firsts, and some are comebacks. Write them down so you can see how far you have come.</p>
+      <div class="row no-print">
+        <div class="field"><label for="m-date">Date</label><input type="date" id="m-date"></div>
+        <div class="field"><label for="m-title">What happened</label><input type="text" id="m-title" placeholder="e.g. First 10 pull-ups in a row" maxlength="80"></div>
+        <div class="field" style="flex:1;min-width:220px"><label for="m-note">Details (optional)</label><input type="text" id="m-note" placeholder="How it felt, what made it possible" maxlength="240"></div>
+        <button id="add-m">Add milestone</button>
+      </div>
+      <ul class="timeline" id="m-list" style="margin-top:26px"></ul>
+      <p class="empty" id="m-empty">No milestones yet.</p>
+    </div>
+  </section>
+
+  <section id="recovery">
+    <div class="wrap">
+      <h2>Recovery principles</h2>
+      <p class="sub">Lessons that usually cost an injury to learn. They are here so you can learn them for free.</p>
+      <div class="principles">
+        <div class="card"><h3>Time under tension beats rep counts</h3><p>Slow, controlled reps and negatives build more strength than rushing through numbers just to say you did them.</p></div>
+        <div class="card"><h3>Restraint is a skill</h3><p>Progress is limited less by effort than by patience. Counting the days you rest makes rest feel like training, because it is.</p></div>
+        <div class="card"><h3>Adapt, don't skip</h3><p>If the perfect warm-up or cool-down isn't possible, do the parts that are. A partial routine beats none.</p></div>
+        <div class="card"><h3>One outlet isn't enough</h3><p>Training is a great way to manage stress, but it works best as one support among many: friends, sleep, creativity and conversation.</p></div>
+      </div>
+      <div class="counter" aria-live="polite">
+        <span>Rest-day counter:</span>
+        <output id="days">0</output>
+        <span class="pct" id="rest-last"></span>
+        <button id="add-rest">Log a rest day</button>
+        <button id="undo-rest" class="ghost">Undo last</button>
+      </div>
+      <p class="note-box">This site gives general training ideas, not medical advice. If something hurts in a sharp or lasting way, stop and see a doctor or physiotherapist before you train through it.</p>
+    </div>
+  </section>
+
+  <section id="week">
+    <div class="wrap">
+      <h2>Your training week</h2>
+      <p class="sub">A template, not a rule. Type straight into each day, and tick rest days. It should bend around exams, injuries and everything else in your life.</p>
+      <div class="week" id="week-grid"></div>
+      <div class="row no-print"><button id="week-example" class="ghost small">Fill with an example week</button></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Sports Journal was first built by Aadi Ramnani as his own training journal for an IB CAS experience in performance enhancement, and has been opened up so anyone can use it to plan and track their training. It is free, has no accounts and stores nothing on any server.</div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  var KEY='sportsJournal.v2';
+  var PRESETS=[
+    {id:'sprint',tag:'Speed',name:'Sprinting',note:'Sprint mechanics, starts and acceleration over 100m and 200m.'},
+    {id:'basketball',tag:'Team',name:'Basketball',note:'Jumping, rebounding, footwork and playing with intent.'},
+    {id:'calisthenics',tag:'Strength',name:'Calisthenics',note:'Push-ups, pull-ups, squats and progressions towards skills like the handstand.'},
+    {id:'jumprope',tag:'Rhythm',name:'Jump rope',note:'Double-unders, footwork patterns and conditioning.'},
+    {id:'breaking',tag:'Creativity',name:'Breaking',note:'Mobility, core strength and coordination for power moves.'},
+    {id:'mobility',tag:'Base',name:'Posture and mobility',note:'The unglamorous work that keeps everything else possible.'},
+    {id:'running',tag:'Endurance',name:'Distance running',note:'Easy runs, tempo work and building up to longer distances.'},
+    {id:'football',tag:'Team',name:'Football',note:'Speed, agility, ball control and match fitness.'},
+    {id:'strength',tag:'Strength',name:'Gym strength training',note:'Compound lifts with good form and steady progression.'}
+  ];
+  var EXAMPLE_GOALS=[
+    {m:'Push-ups in a row',u:'reps',s:3,n:20,t:50,d:'up'},
+    {m:'Pull-ups in a row',u:'reps',s:1,n:3,t:10,d:'up'},
+    {m:'100m sprint',u:'seconds',s:15,n:13.2,t:11,d:'down'},
+    {m:'Vertical jump',u:'inches',s:15,n:19,t:30,d:'up'},
+    {m:'10 km run',u:'minutes',s:57,n:50,t:30,d:'down'}
+  ];
+  var EXAMPLE_WEEK=[
+    {t:'Push and core strength, slow negatives',r:false},
+    {t:'Sprint mechanics and acceleration',r:false},
+    {t:'Team sport practice, then mobility',r:false},
+    {t:'Pull and legs, squat progressions',r:false},
+    {t:'Jump rope and plyometrics',r:false},
+    {t:'Skill work, or an easy endurance run',r:false},
+    {t:'Rest, stretching, sleep',r:true}
+  ];
+  var DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  function blank(){return {name:'',disc:[],custom:[],goals:[],miles:[],rest:[],week:DAYS.map(function(){return {t:'',r:false}})};}
+  var st=blank();
+  try{var raw=localStorage.getItem(KEY); if(raw){var p=JSON.parse(raw); st=Object.assign(blank(),p);}}catch(e){}
+
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){} stats();}
+  function $(id){return document.getElementById(id);}
+  function el(tag,attrs,kids){var e=document.createElement(tag);if(attrs)for(var k in attrs){if(k==='text')e.textContent=attrs[k];else if(k==='cls')e.className=attrs[k];else e.setAttribute(k,attrs[k]);}(kids||[]).forEach(function(c){if(c)e.appendChild(c);});return e;}
+  function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show');},1800);}
+  function uid(){return Math.random().toString(36).slice(2,9);}
+
+  function progress(g){
+    var s=parseFloat(g.s),n=parseFloat(g.n),t=parseFloat(g.t);
+    if(isNaN(s)||isNaN(n)||isNaN(t)||s===t)return null;
+    var p=(n-s)/(t-s);
+    return Math.max(0,Math.min(1,p));
+  }
+
+  function stats(){
+    $('s-disc').textContent=st.disc.length;
+    $('s-goals').textContent=st.goals.length;
+    var ps=st.goals.map(progress).filter(function(x){return x!==null;});
+    $('s-avg').textContent=ps.length?Math.round(100*ps.reduce(function(a,b){return a+b;},0)/ps.length)+'%':'0%';
+    $('s-rest').textContent=st.rest.length;
+    var nm=(st.name||'').trim();
+    $('title').innerHTML='';
+    if(nm){$('title').appendChild(document.createTextNode(nm+'’s training journal'));}
+    else{$('title').appendChild(document.createTextNode('Train hard.'));$('title').appendChild(document.createElement('br'));$('title').appendChild(document.createTextNode('Recover harder.'));}
+  }
+
+  // name
+  $('name').value=st.name||'';
+  $('name').addEventListener('input',function(){st.name=this.value;save();});
+
+  // disciplines
+  function allDisc(){return PRESETS.concat(st.custom);}
+  function renderDisc(){
+    var g=$('disc-grid');g.innerHTML='';
+    allDisc().forEach(function(d){
+      var on=st.disc.indexOf(d.id)>-1;
+      var box=el('input',{type:'checkbox','aria-label':d.name});box.checked=on;
+      var card=el('label',{cls:'card pick'+(on?' on':'')},[box,el('span',{cls:'check',text:on?'✓':''}),el('span',{cls:'tag',text:d.tag||'Yours'}),el('h3',{text:d.name}),el('p',{text:d.note||''})]);
+      box.addEventListener('change',function(){
+        var i=st.disc.indexOf(d.id);
+        if(box.checked&&i<0)st.disc.push(d.id); if(!box.checked&&i>-1)st.disc.splice(i,1);
+        save();renderDisc();
+      });
+      if(d.custom){
+        var rm=el('button',{cls:'ghost small',type:'button',text:'Remove'});rm.style.marginTop='10px';
+        rm.addEventListener('click',function(ev){ev.preventDefault();st.custom=st.custom.filter(function(c){return c.id!==d.id;});st.disc=st.disc.filter(function(x){return x!==d.id;});save();renderDisc();});
+        card.appendChild(rm);
+      }
+      g.appendChild(card);
+    });
+  }
+  $('add-disc').addEventListener('click',function(){
+    var n=$('new-disc').value.trim(); if(!n){$('new-disc').focus();return;}
+    var d={id:'c-'+uid(),tag:'Yours',name:n,note:$('new-disc-note').value.trim(),custom:true};
+    st.custom.push(d);st.disc.push(d.id);$('new-disc').value='';$('new-disc-note').value='';save();renderDisc();toast('Added '+n);
+  });
+
+  // goals
+  function renderGoals(){
+    var b=$('goal-body');b.innerHTML='';
+    $('goal-empty').style.display=st.goals.length?'none':'block';
+    st.goals.forEach(function(g,i){
+      function inp(key,type,ph){var x=el('input',{type:type,placeholder:ph||'','aria-label':key});x.value=g[key]===undefined?'':g[key];if(type==='number')x.step='any';x.addEventListener('input',function(){g[key]=this.value;save();upd();});return x;}
+      var sel=el('select',{'aria-label':'Better is'},[el('option',{value:'up',text:'higher'}),el('option',{value:'down',text:'lower'})]);sel.value=g.d||'up';
+      sel.addEventListener('change',function(){g.d=this.value;save();upd();});
+      var bar=el('i'),pct=el('span',{cls:'pct'});
+      function upd(){var p=progress(g);bar.style.width=(p===null?0:Math.round(p*100))+'%';pct.textContent=p===null?'fill in all three numbers':Math.round(p*100)+'%';}
+      var del=el('button',{cls:'ghost small',type:'button',text:'Delete'});
+      del.addEventListener('click',function(){st.goals.splice(i,1);save();renderGoals();});
+      b.appendChild(el('tr',null,[el('td',null,[inp('m','text','e.g. Plank hold')]),el('td',null,[inp('u','text','reps / s / kg')]),el('td',null,[inp('s','number')]),el('td',null,[inp('n','number')]),el('td',null,[inp('t','number')]),el('td',null,[sel]),el('td',null,[el('div',{cls:'bar'},[bar]),pct]),el('td',{cls:'no-print'},[del])]));
+      upd();
+    });
+  }
+  $('add-goal').addEventListener('click',function(){st.goals.push({m:'',u:'',s:'',n:'',t:'',d:'up'});save();renderGoals();var ins=$('goal-body').querySelectorAll('tr:last-child input');if(ins[0])ins[0].focus();});
+
+  // milestones
+  function renderMiles(){
+    var l=$('m-list');l.innerHTML='';
+    $('m-empty').style.display=st.miles.length?'none':'block';
+    st.miles.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');}).forEach(function(m){
+      var del=el('button',{cls:'ghost small x no-print',type:'button',text:'Delete'});
+      del.addEventListener('click',function(){st.miles=st.miles.filter(function(x){return x.id!==m.id;});save();renderMiles();});
+      var d=m.date?new Date(m.date+'T00:00:00').toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'}):'Undated';
+      l.appendChild(el('li',null,[el('time',{text:d}),del,el('b',{text:m.title}),m.note?document.createTextNode(m.note):null]));
+    });
+  }
+  $('m-date').valueAsDate=new Date();
+  $('add-m').addEventListener('click',function(){
+    var t=$('m-title').value.trim(); if(!t){$('m-title').focus();return;}
+    st.miles.push({id:uid(),date:$('m-date').value,title:t,note:$('m-note').value.trim()});
+    $('m-title').value='';$('m-note').value='';save();renderMiles();toast('Milestone saved');
+  });
+
+  // rest days
+  function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function renderRest(){
+    $('days').textContent=st.rest.length;
+    var last=st.rest[st.rest.length-1];
+    $('rest-last').textContent=last?'last logged '+new Date(last+'T00:00:00').toLocaleDateString(undefined,{day:'numeric',month:'short'}):'';
+  }
+  $('add-rest').addEventListener('click',function(){
+    var d=today(); if(st.rest.indexOf(d)>-1){toast('Today is already logged as a rest day');return;}
+    st.rest.push(d);save();renderRest();toast('Rest day logged. That counts as training.');
+  });
+  $('undo-rest').addEventListener('click',function(){if(!st.rest.length)return;st.rest.pop();save();renderRest();});
+
+  // week
+  function renderWeek(){
+    var g=$('week-grid');g.innerHTML='';
+    st.week.forEach(function(w,i){
+      var ta=el('textarea',{'aria-label':DAYS[i]+' plan',placeholder:'What are you training?'});ta.value=w.t||'';
+      ta.addEventListener('input',function(){w.t=this.value;save();});
+      var cb=el('input',{type:'checkbox'});cb.checked=!!w.r;
+      var day=el('div',{cls:'day'+(w.r?' rest':'')},[el('b',{text:DAYS[i]}),ta,el('label',null,[cb,document.createTextNode('Rest day')])]);
+      cb.addEventListener('change',function(){w.r=this.checked;day.classList.toggle('rest',w.r);save();});
+      g.appendChild(day);
+    });
+  }
+  $('week-example').addEventListener('click',function(){st.week=EXAMPLE_WEEK.map(function(x){return {t:x.t,r:x.r};});save();renderWeek();toast('Example week added. Edit it to fit you.');});
+
+  // example plan
+  $('load-example').addEventListener('click',function(){
+    if(!st.disc.length)st.disc=['sprint','basketball','calisthenics','jumprope','mobility'];
+    if(!st.goals.length)st.goals=EXAMPLE_GOALS.map(function(x){return Object.assign({},x);});
+    if(!st.week.some(function(w){return w.t;}))st.week=EXAMPLE_WEEK.map(function(x){return {t:x.t,r:x.r};});
+    save();renderAll();toast('Example plan loaded. Change anything that does not fit you.');
+  });
+
+  // tools
+  $('print').addEventListener('click',function(){window.print();});
+  $('export').addEventListener('click',function(){
+    var blob=new Blob([JSON.stringify(st,null,2)],{type:'application/json'});
+    var a=el('a',{href:URL.createObjectURL(blob),download:'sports-journal-backup.json'});document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
+  });
+  $('import-btn').addEventListener('click',function(){$('import').click();});
+  $('import').addEventListener('change',function(){
+    var f=this.files[0]; if(!f)return; var r=new FileReader();
+    r.onload=function(){try{var p=JSON.parse(r.result); if(typeof p!=='object'||!p)throw 0; st=Object.assign(blank(),p); save(); $('name').value=st.name||''; renderAll(); toast('Backup restored');}catch(e){toast('That file is not a Sports Journal backup');}};
+    r.readAsText(f); this.value='';
+  });
+  function wipeUI(on){$('wipe').hidden=on;$('wipe-yes').hidden=!on;$('wipe-no').hidden=!on;}
+  $('wipe').addEventListener('click',function(){wipeUI(true);});
+  $('wipe-no').addEventListener('click',function(){wipeUI(false);});
+  $('wipe-yes').addEventListener('click',function(){st=blank();try{localStorage.removeItem(KEY);}catch(e){} $('name').value='';wipeUI(false);renderAll();toast('All data cleared');});
+
+  function renderAll(){renderDisc();renderGoals();renderMiles();renderRest();renderWeek();stats();}
+  renderAll();
+})();
+</script>
+</body>
+</html>
